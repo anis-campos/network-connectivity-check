@@ -2,14 +2,14 @@ package fr.dasilvacampos.network_check.networkMonitoring
 
 import android.app.Activity
 import android.app.Application
-import android.content.*
+import android.content.Context
+import android.content.IntentFilter
 import android.net.*
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 /**
  * Enables synchronous and asynchronous connectivity state checking thanks to LiveData and stored states.
@@ -75,6 +75,8 @@ private class NetworkStateHolderImplementation : NetworkStateHolder {
 
     override var network: Network? = null
 
+    override var linkProperties: LinkProperties? = null
+
     override var networkCapabilities: NetworkCapabilities? = null
         set(value) {
             field = value
@@ -86,19 +88,6 @@ private class NetworkStateHolderImplementation : NetworkStateHolder {
     override val capabilityEvents: MutableLiveData<NetworkStateHolder> = MutableLiveData()
 
 }
-
-/**
- * Name of the intent action and extrass
- */
-private object Constants {
-    const val PACKAGE_NAME = "com.network4q" // your package here
-    const val ACTION_STATE_CHANGED = "$PACKAGE_NAME.NetworkStateHolder.ACTION_STATE_CHANGED"
-    const val ACTION_CAPABILITY_CHANGED = "$PACKAGE_NAME.NetworkStateHolder.ACTION_CAPABILITY_CHANGED"
-    const val EXTRA_NETWORK_IS_AVAILABLE = "$PACKAGE_NAME.NetworkStateHolder.NETWORK_IS_AVAILABLE"
-    const val EXTRA_NETWORK = "$PACKAGE_NAME.NetworkStateHolder.EXTRA_NETWORK"
-    const val EXTRA_NETWORK_CAPABILITIES = "$PACKAGE_NAME.NetworkStateHolder.EXTRA_NETWORK_CAPABILITIES"
-}
-
 
 
 
@@ -141,63 +130,38 @@ fun Application.registerConnectivityBroadcaster() {
 
     val holder = NetworkStateHolder.instance as NetworkStateHolderImplementation
 
-    val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            context ?: return
-            intent ?: return
-
-            when (intent.action) {
-                Constants.ACTION_CAPABILITY_CHANGED -> {
-                    val capabilities =
-                        intent.getParcelableExtra<NetworkCapabilities>(Constants.EXTRA_NETWORK_CAPABILITIES)
-                    holder.networkCapabilities = capabilities
-
-                }
-                Constants.ACTION_STATE_CHANGED -> {
-                    val booleanExtra = intent.getBooleanExtra(Constants.EXTRA_NETWORK_IS_AVAILABLE, false)
-                    val network = intent.getParcelableExtra<Network>(Constants.EXTRA_NETWORK)
-
-                    holder.isConnected = booleanExtra
-                    holder.network = network
-                }
-            }
-
-        }
-    }
 
     val broadcaster = object : ConnectivityManager.NetworkCallback() {
 
 
         private val TAG = "broadcaster"
 
-        private fun connectivityIntent(isAvailable: Boolean, network: Network): Intent = Intent().apply {
-            action = Constants.ACTION_STATE_CHANGED
-            putExtra(Constants.EXTRA_NETWORK_IS_AVAILABLE, isAvailable)
-            putExtra(Constants.EXTRA_NETWORK, network)
+        private fun connectivityIntent(isAvailable: Boolean, network: Network) {
+            holder.isConnected = isAvailable
+            holder.network = network
         }
 
 
-        private fun capabilityIntent(networkCapabilities: NetworkCapabilities): Intent = Intent().apply {
-            action = Constants.ACTION_CAPABILITY_CHANGED
-            putExtra(Constants.EXTRA_NETWORK_CAPABILITIES, networkCapabilities)
+        private fun capabilityIntent(networkCapabilities: NetworkCapabilities) {
+            holder.networkCapabilities = networkCapabilities
         }
 
         //in case of a new network ( wifi enabled ) this is called first
         override fun onAvailable(network: Network) {
             Log.i(TAG, "[$network] - new network")
-            sendBroadcast(connectivityIntent(true, network))
+            connectivityIntent(true, network)
         }
 
         //this is called several times in a row, as capabilities are added step by step
         override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
             Log.i(TAG, "[$network] - network capability changed: $networkCapabilities")
-            sendBroadcast(capabilityIntent(networkCapabilities))
+            capabilityIntent(networkCapabilities)
         }
 
         //this is called after
         override fun onLost(network: Network) {
             Log.i(TAG, "[$network] - network lost")
-            sendBroadcast(connectivityIntent(false, network))
+            connectivityIntent(false, network)
         }
 
         override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
@@ -217,14 +181,7 @@ fun Application.registerConnectivityBroadcaster() {
         }
     }
 
-    //static objects
-    val filter = IntentFilter().apply {
-        addAction(Constants.ACTION_STATE_CHANGED)
-        addAction(Constants.ACTION_CAPABILITY_CHANGED)
-    }
 
-    //start listening to the broadcast
-    applicationContext.registerReceiver(receiver, filter)
 
     //get connectivity manager
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
