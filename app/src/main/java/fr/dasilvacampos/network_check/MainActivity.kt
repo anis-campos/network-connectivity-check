@@ -1,39 +1,44 @@
 package fr.dasilvacampos.network_check
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.Menu
-import android.view.MenuItem
-
+import fr.dasilvacampos.network_check.networkMonitoring.NetworkStateHolder
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        textView.text = "This view is hooked to network changed using NetworkStateHolder and LiveData"
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        NetworkStateHolder.instance.connectivityEvents.observe(this, Observer {
+            if (it.isConnected)
+                showSnackBar(textView, "The network is back !")
+            else
+                showSnackBar(textView, "The network is back !")
+
+        })
+
+        fab.setOnClickListener {
+            startActivity(Intent(this, SecondActivity::class.java))
         }
+
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
+}
+
+fun showSnackBar(view: View, text: String) {
+    val snackbar = Snackbar.make(view, text, Snackbar.LENGTH_LONG)
+    snackbar.setAction("Close") {
+        snackbar.dismiss()
     }
+    snackbar.show()
 }
