@@ -1,6 +1,7 @@
 package fr.dasilvacampos.network_check
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import fr.dasilvacampos.network_check.networkMonitoring.NetworkConnectivityListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -11,11 +12,13 @@ class SecondActivity : AppCompatActivity(), NetworkConnectivityListener {
 
     override fun networkAvailable() {
         showSnackBar(textView, "The network is back !")
+        wifi_off_icon.visibility = View.GONE
         checkOnResume = false
     }
 
     override fun networkLost() {
         showSnackBar(textView, "There is no more network")
+        wifi_off_icon.visibility = View.VISIBLE
         checkOnResume = true
     }
 

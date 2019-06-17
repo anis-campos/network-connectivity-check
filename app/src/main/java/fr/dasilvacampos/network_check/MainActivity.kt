@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
-import fr.dasilvacampos.network_check.networkMonitoring.NetworkStateHolder
+import fr.dasilvacampos.network_check.networkMonitoring.CurrentNetworkState
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,11 +18,15 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         textView.text = "This view is hooked to network changed using NetworkStateHolder and LiveData"
 
-        NetworkStateHolder.instance.connectivityEvents.observe(this, Observer {
-            if (it.isConnected)
+        CurrentNetworkState.connectivityEvents.observe(this, Observer {
+            if (it.isConnected) {
                 showSnackBar(textView, "The network is back !")
-            else
+                wifi_off_icon.visibility = View.GONE
+            } else {
                 showSnackBar(textView, "The network is back !")
+                wifi_off_icon.visibility = View.VISIBLE
+            }
+
 
         })
 
