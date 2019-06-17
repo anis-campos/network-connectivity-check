@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -36,7 +35,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" android:textAlignment="center"/>
+                app:layout_constraintTop_toTopOf="parent" android:textAlignment="center" tools:text="Text here"/>
+
+        <ImageView android:layout_width="60dp" android:layout_height="60dp" android:visibility="gone"
+                   app:layout_constraintTop_toBottomOf="@id/textView" app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:srcCompat="@drawable/ic_signal_wifi_off_black_24dp" tools:visibility="visible"
+                   android:id="@+id/wifi_off_icon" android:layout_marginTop="16dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

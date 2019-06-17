@@ -4,6 +4,9 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
+
 android {
     compileSdkVersion 29
     defaultConfig {
@@ -19,6 +22,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    kapt {
+        correctErrorTypes = true
+        useBuildCache = true
     }
 }
 
@@ -36,6 +44,9 @@ dependencies {
 
     //additional here
     implementation 'androidx.preference:preference:1.1.0-beta01'
+
+
+
 
 
 
