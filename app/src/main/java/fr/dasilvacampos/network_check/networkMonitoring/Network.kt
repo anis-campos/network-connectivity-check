@@ -66,9 +66,8 @@ interface NetworkStateHolder {
 }
 
 /**
- * This a simple way to access to the a the current state of the network.
- * This can be replaced by a reference resolved by a DI Container
- */
+ * As a static object, CurrentNetworkState gives a simple way to access the current state of the network across the app.
+ * */
 object CurrentNetworkState : NetworkStateHolder {
 
     private val instance: NetworkStateHolder = StaticNetworkStateHolder
@@ -134,7 +133,9 @@ fun Application.registerConnectivityBroadcaster() {
 }
 
 /**
- * This is a static implementation of NetworkStateHolder, it holds the network states but it's only usable from this file.
+ * This is a static implementation of NetworkStateHolder, it holds the network states and is editable but it's only usable from this file.
+ * In a project with DI, this would not be static and be resolved by the container, thus removing the use of CurrentNetworkState
+ * @see CurrentNetworkState
  */
 private object StaticNetworkStateHolder : NetworkStateHolder {
 
