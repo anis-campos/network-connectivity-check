@@ -18,15 +18,6 @@ interface NetworkConnectivityListener {
     val checkOnResume: Boolean
         get() = true
 
-    /**
-     * Called if connectivity is lost. If checkOnResume is true, this will be called on resume
-     * if the connectivity was lost during the activity idle time
-     */
-    fun networkLost() {}
 
-    /**
-     * Called if connectivity is back. If checkOnResume is true, this will be called on resume
-     * if the connectivity was back during the activity idle time
-     */
-    fun networkAvailable() {}
+    fun networkConnectivityChanged(event: Event)
 }

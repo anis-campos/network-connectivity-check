@@ -6,6 +6,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
+import fr.dasilvacampos.network_check.networkMonitoring.Event
+import fr.dasilvacampos.network_check.networkMonitoring.NetworkEvents
+import fr.dasilvacampos.network_check.networkMonitoring.NetworkState
 import fr.dasilvacampos.network_check.networkMonitoring.NetworkStateHolder
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -18,10 +21,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        textView.text = "This view is hooked to network changed using NetworkStateHolder and LiveData"
+        textView.text = "This view is hooked to network changed using NetworkState and LiveData"
 
-        NetworkStateHolder.instance.connectivityEvents.observe(this, Observer {
-            handleConnectivityChange(it)
+        NetworkEvents.observe(this, Observer {
+            if (it is Event.ConnectivityEvent)
+                handleConnectivityChange(it.state)
         })
 
         fab.setOnClickListener {
@@ -30,8 +34,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun handleConnectivityChange(networkStateHolder: NetworkStateHolder) {
-        if (networkStateHolder.isConnected) {
+    private fun handleConnectivityChange(networkState: NetworkState) {
+        if (networkState.isConnected) {
             if (lostConnection) {
                 showSnackBar(textView, "The network is back !")
                 wifi_off_icon.visibility = View.GONE
@@ -47,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        handleConnectivityChange(NetworkStateHolder.instance)
+        handleConnectivityChange(NetworkStateHolder)
     }
 
 }
