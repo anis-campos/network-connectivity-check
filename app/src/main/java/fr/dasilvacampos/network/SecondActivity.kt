@@ -1,10 +1,10 @@
-package fr.dasilvacampos.network_check
+package fr.dasilvacampos.network
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import fr.dasilvacampos.network_check.networkMonitoring.Event
-import fr.dasilvacampos.network_check.networkMonitoring.NetworkConnectivityListener
+import fr.dasilvacampos.network.monitoring.Event
+import fr.dasilvacampos.network.monitoring.NetworkConnectivityListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 class SecondActivity : AppCompatActivity(), NetworkConnectivityListener {

@@ -1,4 +1,4 @@
-package fr.dasilvacampos.network_check
+package fr.dasilvacampos.network
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4

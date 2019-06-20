@@ -1,4 +1,4 @@
-package fr.dasilvacampos.network_check.networkMonitoring
+package fr.dasilvacampos.network.monitoring
 
 /**
  * When implemented by an Activity, it add hooks to network events thanks to ActivityLifecycleCallbacks

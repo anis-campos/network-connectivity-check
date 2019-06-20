@@ -1,4 +1,4 @@
-package fr.dasilvacampos.network_check.networkMonitoring
+package fr.dasilvacampos.network.monitoring
 
 import android.net.LinkProperties
 import android.net.NetworkCapabilities

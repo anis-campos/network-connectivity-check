@@ -1,4 +1,4 @@
-package fr.dasilvacampos.network_check
+package fr.dasilvacampos.network
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,10 +6,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
-import fr.dasilvacampos.network_check.networkMonitoring.Event
-import fr.dasilvacampos.network_check.networkMonitoring.NetworkEvents
-import fr.dasilvacampos.network_check.networkMonitoring.NetworkState
-import fr.dasilvacampos.network_check.networkMonitoring.NetworkStateHolder
+import fr.dasilvacampos.network.monitoring.Event
+import fr.dasilvacampos.network.monitoring.NetworkEvents
+import fr.dasilvacampos.network.monitoring.NetworkState
+import fr.dasilvacampos.network.monitoring.NetworkStateHolder
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

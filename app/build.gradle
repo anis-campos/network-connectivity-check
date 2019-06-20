@@ -8,7 +8,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "fr.dasilvacampos.network_check"
+        applicationId "fr.dasilvacampos.network"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
