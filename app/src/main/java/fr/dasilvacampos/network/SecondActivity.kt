@@ -31,6 +31,8 @@ class SecondActivity : AppCompatActivity(), NetworkConnectivityListener {
         setSupportActionBar(toolbar)
         textView.text = "This view is hooked to network changed using NetworkConnectivityListener"
 
+        wifi_off_icon.visibility = if (!isConnected) View.VISIBLE else View.GONE
+
 
         fab.setImageResource(android.R.drawable.ic_media_rew)
         fab.setOnClickListener {
