@@ -13,7 +13,6 @@ interface NetworkState {
 
     /**
      * Stored connectivity state of the network
-     * <p>
      * True if the device as access the the network
      */
     val isConnected: Boolean
@@ -45,5 +44,9 @@ interface NetworkState {
     val isMobile: Boolean
         get() = networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ?: false
 
-
+    /**
+     * Get the interface name ( shortcut )
+     */
+    val interfaceName: String?
+        get() = linkProperties?.interfaceName
 }
