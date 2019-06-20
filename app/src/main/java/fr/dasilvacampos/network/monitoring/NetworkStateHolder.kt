@@ -60,7 +60,7 @@ object NetworkStateHolder : NetworkState {
         override var isConnected: Boolean = false
             set(value) {
                 field = value
-                NetworkEvents.mutator.postValue(Event.ConnectivityEvent(this))
+                NetworkEvents.notify(Event.ConnectivityEvent(this))
             }
 
         override var network: Network? = null
@@ -69,14 +69,14 @@ object NetworkStateHolder : NetworkState {
             set(value) {
                 val old = field
                 field = value
-                NetworkEvents.mutator.postValue(Event.LinkPropertyChangeEvent(this, old))
+                NetworkEvents.notify(Event.LinkPropertyChangeEvent(this, old))
             }
 
         override var networkCapabilities: NetworkCapabilities? = null
             set(value) {
                 val old = field
                 field = value
-                NetworkEvents.mutator.postValue(Event.NetworkCapabilityEvent(this, old))
+                NetworkEvents.notify(Event.NetworkCapabilityEvent(this, old))
 
             }
     }
@@ -195,8 +195,6 @@ object NetworkStateHolder : NetworkState {
         private fun NetworkConnectivityListener.onListenerResume() {
             if (!shouldBeCalled || !checkOnResume) return
 
-            networkConnectivityChanged(Event.ConnectivityEvent(networkState))
-
             val previousState = previousState
             val isConnected = networkState.isConnected
 
@@ -231,8 +229,6 @@ object NetworkStateHolder : NetworkState {
         /**
          * This property serves as a flag to detect if this activity lost network
          */
-
-
         private var NetworkConnectivityListener.previousState: Boolean?
             get() {
                 return when {
