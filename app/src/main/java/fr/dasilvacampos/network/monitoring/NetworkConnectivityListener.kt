@@ -18,6 +18,9 @@ interface NetworkConnectivityListener {
     val checkOnResume: Boolean
         get() = true
 
+    val isConnected: Boolean
+        get() = NetworkStateHolder.isConnected
+
 
     fun networkConnectivityChanged(event: Event)
 }
