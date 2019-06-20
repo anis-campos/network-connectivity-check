@@ -239,8 +239,16 @@ object NetworkStateHolder : NetworkState {
             }
             set(value) {
                 when {
-                    this is Fragment -> this.arguments?.previousState = value
-                    this is Activity -> this.intent.extras?.previousState = value
+                    this is Fragment -> {
+                        val a = this.arguments ?: Bundle()
+                        a.previousState = value
+                        this.arguments = a
+                    }
+                    this is Activity -> {
+                        val a = this.intent.extras ?: Bundle()
+                        a.previousState = value
+                        this.intent.replaceExtras(a)
+                    }
                 }
             }
 
