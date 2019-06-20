@@ -57,10 +57,3 @@ class MainActivity : AppCompatActivity() {
 }
 
 
-fun showSnackBar(view: View, text: String) {
-    val snackbar = Snackbar.make(view, text, Snackbar.LENGTH_LONG)
-    snackbar.setAction("Close") {
-        snackbar.dismiss()
-    }
-    snackbar.show()
-}
