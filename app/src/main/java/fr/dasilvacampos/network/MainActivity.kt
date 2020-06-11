@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import fr.dasilvacampos.network.monitoring.Event
 import fr.dasilvacampos.network.monitoring.NetworkEvents
 import fr.dasilvacampos.network.monitoring.NetworkState
-import fr.dasilvacampos.network.monitoring.NetworkStateHolder
+import fr.dasilvacampos.network.monitoring.ConnectivityStateHolder
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,11 +26,11 @@ class MainActivity : AppCompatActivity() {
             previousSate = it.getBoolean("LOST_CONNECTION")
         }
 
-        wifi_off_icon.visibility = if (!NetworkStateHolder.isConnected) View.VISIBLE else View.GONE
+        wifi_off_icon.visibility = if (!ConnectivityStateHolder.isConnected) View.VISIBLE else View.GONE
 
         NetworkEvents.observe(this, Observer {
             if (it is Event.ConnectivityEvent)
-                handleConnectivityChange(it.state)
+                handleConnectivityChange()
         })
 
         fab.setOnClickListener {
@@ -44,23 +44,23 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun handleConnectivityChange(networkState: NetworkState) {
-        if (networkState.isConnected && !previousSate) {
+    private fun handleConnectivityChange() {
+        if (ConnectivityStateHolder.isConnected && !previousSate) {
             showSnackBar(textView, "The network is back !")
             wifi_off_icon.visibility = View.GONE
         }
 
-        if (!networkState.isConnected && previousSate) {
+        if (!ConnectivityStateHolder.isConnected && previousSate) {
             showSnackBar(textView, "No Network !")
             wifi_off_icon.visibility = View.VISIBLE
         }
 
-        previousSate = networkState.isConnected
+        previousSate = ConnectivityStateHolder.isConnected
     }
 
     override fun onResume() {
         super.onResume()
-        handleConnectivityChange(NetworkStateHolder)
+        handleConnectivityChange()
     }
 
 }

@@ -9,14 +9,13 @@ import android.util.Log
 /**
  * Implementation of ConnectivityManager.NetworkCallback,
  * it stores every change of connectivity into NetworkState
- * @see NetworkState
  */
-internal class NetworkCallbackImp(private val holder: NetworkStateImp) :
+internal class NetworkCallbackImp(private val stateHolder: NetworkStateImp) :
     ConnectivityManager.NetworkCallback() {
 
     private fun updateConnectivity(isAvailable: Boolean, network: Network) {
-        holder.network = network
-        holder.isConnected = isAvailable
+        stateHolder.network = network
+        stateHolder.isAvailable = isAvailable
     }
 
     //in case of a new network ( wifi enabled ) this is called first
@@ -28,7 +27,7 @@ internal class NetworkCallbackImp(private val holder: NetworkStateImp) :
     //this is called several times in a row, as capabilities are added step by step
     override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
         Log.i(TAG, "[$network] - network capability changed: $networkCapabilities")
-        holder.networkCapabilities = networkCapabilities
+        stateHolder.networkCapabilities = networkCapabilities
     }
 
     //this is called after
@@ -38,7 +37,7 @@ internal class NetworkCallbackImp(private val holder: NetworkStateImp) :
     }
 
     override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
-        holder.linkProperties = linkProperties
+        stateHolder.linkProperties = linkProperties
         Log.i(TAG, "[$network] - link changed: ${linkProperties.interfaceName}")
     }
 
