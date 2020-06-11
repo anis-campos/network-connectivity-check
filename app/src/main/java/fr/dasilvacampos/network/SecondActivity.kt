@@ -13,7 +13,7 @@ class SecondActivity : AppCompatActivity(), NetworkConnectivityListener {
     override fun networkConnectivityChanged(event: Event) {
         when (event) {
             is Event.ConnectivityEvent -> {
-                if (event.state.isConnected) {
+                if (event.isConnected) {
                     showSnackBar(textView, "The network is back !")
                     wifi_off_icon.visibility = View.GONE
                 } else {

@@ -5,10 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import fr.dasilvacampos.network.monitoring.Event
-import fr.dasilvacampos.network.monitoring.NetworkConnectivityListener
-import fr.dasilvacampos.network.monitoring.NetworkEvents
-import fr.dasilvacampos.network.monitoring.NetworkState
+import fr.dasilvacampos.network.monitoring.*
 
 internal object Constants {
     const val ID_KEY = "network.monitoring.previousState"
@@ -23,19 +20,19 @@ internal fun NetworkConnectivityListener.onListenerCreated() {
 
 }
 
-internal fun NetworkConnectivityListener.onListenerResume(networkState: NetworkState) {
+internal fun NetworkConnectivityListener.onListenerResume() {
     if (!shouldBeCalled || !checkOnResume) return
 
     val previousState = previousState
-    val isConnected = networkState.isConnected
+    val isConnected = ConnectivityStateHolder.isConnected
 
     this.previousState = isConnected
 
-    val connectionLost = (previousState == null || previousState == true) && !isConnected
+    val connectionLost = previousState != false && !isConnected
     val connectionBack = previousState == false && isConnected
 
     if (connectionLost || connectionBack) {
-        networkConnectivityChanged(Event.ConnectivityEvent(networkState))
+        networkConnectivityChanged(Event.ConnectivityEvent(isConnected))
     }
 
 }

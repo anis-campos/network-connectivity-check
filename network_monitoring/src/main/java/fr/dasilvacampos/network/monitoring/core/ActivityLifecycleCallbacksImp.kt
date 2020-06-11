@@ -16,7 +16,7 @@ import fr.dasilvacampos.network.monitoring.NetworkState
  * thus enabling
  * @see Application.ActivityLifecycleCallbacks
  */
-internal class ActivityLifecycleCallbacksImp(private val networkState: NetworkState) :
+internal class ActivityLifecycleCallbacksImp :
     Application.ActivityLifecycleCallbacks {
 
 
@@ -34,10 +34,7 @@ internal class ActivityLifecycleCallbacksImp(private val networkState: NetworkSt
         if (activity !is LifecycleOwner) return
 
         if (activity is FragmentActivity)
-            addLifecycleCallbackToFragments(
-                activity,
-                networkState
-            )
+            addLifecycleCallbackToFragments(activity)
 
         if (activity !is NetworkConnectivityListener || !activity.shouldBeCalled) return
 
@@ -49,24 +46,28 @@ internal class ActivityLifecycleCallbacksImp(private val networkState: NetworkSt
         if (activity !is LifecycleOwner) return
         if (activity !is NetworkConnectivityListener) return
 
-        activity.onListenerResume(networkState)
+        activity.onListenerResume()
     }
 
 
-    private fun addLifecycleCallbackToFragments(activity: FragmentActivity, networkState: NetworkState) = safeRun(
+    private fun addLifecycleCallbackToFragments(activity: FragmentActivity) = safeRun(
         TAG
     ) {
 
         val callback = object : FragmentManager.FragmentLifecycleCallbacks() {
 
-            override fun onFragmentCreated(fm: FragmentManager, fragment: Fragment, savedInstanceState: Bundle?) {
+            override fun onFragmentCreated(
+                fm: FragmentManager,
+                fragment: Fragment,
+                savedInstanceState: Bundle?
+            ) {
                 if (fragment !is NetworkConnectivityListener || !fragment.shouldBeCalled) return
                 fragment.onListenerCreated()
             }
 
             override fun onFragmentResumed(fm: FragmentManager, fragment: Fragment) {
                 if (fragment is NetworkConnectivityListener)
-                    fragment.onListenerResume(networkState)
+                    fragment.onListenerResume()
             }
         }
 
