@@ -12,11 +12,7 @@ import fr.dasilvacampos.network.monitoring.NetworkState
  */
 internal class NetworkStateImp(callback: (NetworkState, NetworkEvent) -> Unit) : NetworkState {
 
-    private var notify: (NetworkEvent) -> Unit
-
-    init {
-        this.notify = { e: NetworkEvent -> callback(this, e) }
-    }
+    private var notify: (NetworkEvent) -> Unit = { e: NetworkEvent -> callback(this, e) }
 
     override var isAvailable: Boolean = false
         set(value) {

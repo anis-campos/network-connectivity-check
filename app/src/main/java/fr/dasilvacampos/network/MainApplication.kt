@@ -1,11 +1,13 @@
 package fr.dasilvacampos.network
 
 import android.app.Application
-import fr.dasilvacampos.network.monitoring.ConnectivityStateHolder.registerConnectivityBroadcaster
+import fr.dasilvacampos.network.monitoring.ConnectivityStateHolder.initNetworkMonitorConfig
 
 class MainApplication : Application() {
+
     override fun onCreate() {
         super.onCreate()
-        registerConnectivityBroadcaster()
+        initNetworkMonitorConfig()
     }
+
 }
